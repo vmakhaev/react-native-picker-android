@@ -1,10 +1,10 @@
 'use strict';
 
 import React, {
-	StyleSheet, 
-	PropTypes, 
-	View, 
-	Text, 
+	StyleSheet,
+	PropTypes,
+	View,
+	Text,
 	Image,
 	Dimensions,
 	PixelRatio,
@@ -37,6 +37,7 @@ export default class PickerAndroid extends React.Component{
 		pickerStyle: PropTypes.any,
 		//picker item's style
 		itemStyle: PropTypes.any,
+		middleItemStyle: PropTypes.any,
 		//picked value changed then call this function
 		onValueChange: PropTypes.func,
 		//default to be selected value
@@ -58,12 +59,14 @@ export default class PickerAndroid extends React.Component{
 			items: nextState.items,
 			pickerStyle: nextState.pickerStyle,
 			itemStyle: nextState.itemStyle,
+			middleItemStyle: nextState.middleItemStyle,
 			onValueChange: nextState.onValueChange
 		}, context]) !== JSON.stringify([{
 			selectedIndex: this.state.selectedIndex,
 			items: this.state.items,
 			pickerStyle: this.state.pickerStyle,
 			itemStyle: this.state.itemStyle,
+			middleItemStyle: this.state.middleItemStyle,
 			onValueChange: this.state.onValueChange
 		}, this.context]);
 	}
@@ -73,6 +76,7 @@ export default class PickerAndroid extends React.Component{
 		let items = [];
 		let pickerStyle = props.pickerStyle;
 		let itemStyle = props.itemStyle;
+		let middleItemStyle = props.middleItemStyle;
 		let onValueChange = props.onValueChange;
 		React.Children.forEach(props.children, (child, index) => {
 			child.props.value === props.selectedValue && ( selectedIndex = index );
@@ -83,6 +87,7 @@ export default class PickerAndroid extends React.Component{
 			items,
 			pickerStyle,
 			itemStyle,
+			middleItemStyle,
 			onValueChange
 		};
 	}
@@ -169,7 +174,7 @@ export default class PickerAndroid extends React.Component{
 
 	_renderItems(items){
 		//value was used to watch the change of picker
-		//label was used to display 
+		//label was used to display
 		let upItems = [], middleItems = [], downItems = [];
 		items.forEach((item, index) => {
 
@@ -184,7 +189,7 @@ export default class PickerAndroid extends React.Component{
 
 			middleItems[index] = <Text
 									key={'mid'+index}
-									style={[styles.middleText, this.state.itemStyle]}>{item.label}
+									style={[styles.middleText, this.state.itemStyle, this.state.middleItemStyle]}>{item.label}
 								</Text>;
 
 			downItems[index] = <Text
@@ -201,7 +206,7 @@ export default class PickerAndroid extends React.Component{
 	}
 
 	_onValueChange(){
-		//the current picked label was more expected to be passed, 
+		//the current picked label was more expected to be passed,
 		//but PickerIOS only passed value, so we set label to be the second argument
 		//add by zooble @2015-12-10
 		var curItem = this.state.items[this.index];
@@ -214,17 +219,17 @@ export default class PickerAndroid extends React.Component{
 		let items = this._renderItems(this.state.items);
 
 		let upViewStyle = {
-			marginTop: (3 - index) * 30, 
-			height: length * 30, 
+			marginTop: (3 - index) * 30,
+			height: length * 30,
 		};
 		let middleViewStyle = {
-			marginTop:  -index * 40, 
+			marginTop:  -index * 40,
 		};
 		let downViewStyle = {
-			marginTop: (-index - 1) * 30, 
-			height:  length * 30, 
+			marginTop: (-index - 1) * 30,
+			height:  length * 30,
 		};
-		
+
 		return (
 			//total to be 90*2+40=220 height
 			<View style={[styles.container, this.state.pickerStyle]} {...this._panResponder.panHandlers}>
